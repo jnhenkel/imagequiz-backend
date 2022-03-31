@@ -49,7 +49,7 @@ let store = {
         if (score) {
             return {done: true, score: score};
         } else {
-            return {done: false, score: score};
+            return {done: false};
         }
     }
 }
