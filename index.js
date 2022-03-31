@@ -5,6 +5,7 @@ const { store } = require('./data/store');
 const { quizzes } = require('./data/data');
 const { flowers } = require('./data/flowers');
 const { customers } = require('./data/customers');
+const { scores } = require('./data/scores');
 
 const app = express();
 
@@ -51,13 +52,35 @@ app.get('/flowers', (req, res) => {
 
 //4
 app.get('/quiz/:id', (req, res) => {
-    let id = req.params.id;
+    let quizID = req.params.id;
     //res.status(200).json({done: true, result: quizzes[id], message: 'Here is the quiz'});
-    let quiz = store.getQuiz(id);
+    let quiz = store.getQuiz(quizID);
     if (quiz.done) {
         res.status(200).json({done: true, result: quiz.quiz, message: 'Here is the quiz'});
     } else {
         res.status(404).json({done: false, message: quiz.message});
+    }
+})
+
+//5
+app.post('/score', (req, res) => {
+    let quizTaker = req.body.quizTaker;
+    let quizId = req.body.quizId;
+    let score = req.body.score;
+    let date = new Date();
+    scores.push({quizTaker: quizTaker, quizId: quizId, score: score, date: date});
+    res.status(200).json({done: true, message: 'score added'});
+})
+
+//6
+app.get('/scores/:quiztaker/:quizid', (req, res) => {
+    let quizTaker = req.params.quiztaker;
+    let quizId = req.params.quizid;
+    let score = store.getScore(quizTaker, quizId);
+    if (score.done) {
+        res.status(200).json({done: true, result: score.score, message: 'The score was found'});
+    } else {
+        res.status(404).json({done: false, result: score.score, message: 'The score was not found'})
     }
 })
 

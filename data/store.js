@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 let { customers } = require('./customers');
-const { quizzes } =require('./data');
+const { quizzes } = require('./data');
+const { scores } = require('./scores');
 
 let store = {
     addCustomer: (name, email, password) => {
@@ -39,6 +40,15 @@ let store = {
             return {done: true, quiz};
         } else {
             return {done: false, message: 'There was no quiz found with that name'};
+        }
+    },
+
+    getScore: (quizTaker, quizId) => {
+        let score = scores.find(x => x.quizTaker.toLowerCase() === quizTaker.toLowerCase() && x.quizId.toLowerCase() === quizId.toLowerCase());
+        if (score) {
+            return {done: true, score};
+        } else {
+            return {done: false, score};
         }
     }
 }
