@@ -84,7 +84,7 @@ app.get('/scores/:quiztaker/:quizid', (req, res) => {
     if (score.done) {
         res.status(200).json({done: true, result: score.score, message: 'The score was found'});
     } else {
-        res.status(404).json({done: false, result: 'undefined', message: 'The score was not found'});
+        res.status(404).json({done: false, result: undefined, message: 'The score was not found'});
     }
 })
 
