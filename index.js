@@ -1,6 +1,7 @@
 const express = require('express');
 /* use a store to separate modules */
 const {store} = require('./data/store');
+const {flowers} = require('./data/flowers');
 const {customers} = require('./data/customers');
 
 const app = express();
@@ -9,6 +10,11 @@ const port = process.env.PORT || 4002;
 
 //middlewares
 app.use(express.json());
+
+//default root
+app.get('/', (req, res) => {
+    res.status(200).json({done: true, message: 'This is the backend for imagequiz'});
+});
 
 //1
 app.post('/register', (req, res) => {
@@ -20,7 +26,7 @@ app.post('/register', (req, res) => {
     } else {
         res.status(403).json({done: false, message: 'A customer already exists with that email'});
     }
-})
+});
 
 //2
 app.post('/login', (req, res) => {
@@ -32,10 +38,13 @@ app.post('/login', (req, res) => {
     } else {
         res.status(410).json({done: false, message: dbSearch.message});
     }
-})
+});
 
 //3
+app.get('/flowers', (req, res) => {
+    res.status(200).json({done: true, result: flowers, message: 'These are the flowers from flowers.js'})
+});
 
 app.listen(port, () => {
     console.log(`listening on ${port}`);
-})
+});
