@@ -36,7 +36,7 @@ app.post('/login', (req, res) => {
     if (dbSearch.valid) {
         res.status(200).json({done: true, message: 'Logged in successfully'});
     } else {
-        res.status(410).json({done: false, message: dbSearch.message});
+        res.status(401).json({done: false, message: dbSearch.message});
     }
 });
 
