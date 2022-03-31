@@ -9,7 +9,7 @@ let store = {
             //first check if name exists
             for (let i = 0; i < customers.length; i++) {
                 if (customers[i].email == email) {
-                    return {valid: false, 'A customer already exists with that email'};
+                    return {valid: false, message:'A customer already exists with that email'};
                 }
             }
             //set new id to be last id in db plus 1
