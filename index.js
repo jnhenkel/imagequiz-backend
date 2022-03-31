@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 //1
-app.post('/register', (req, res) => {
+app.get('/register', (req, res) => {
     let username = req.body.name;
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
