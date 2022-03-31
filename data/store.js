@@ -29,7 +29,7 @@ let store = {
                 return { valid: true };
             }
         }
-        return { valid: false, message: 'Credentials are invalid.' }
+        return { valid: false, message: 'Credentials are invalid.' };
     }
 }
 
