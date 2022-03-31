@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 let { customers } = require('./customers');
+const { quizzes } =require('./data');
 
 let store = {
     addCustomer: (name, email, password) => {
@@ -30,6 +31,15 @@ let store = {
             }
         }
         return { valid: false, message: 'Credentials are invalid.' };
+    },
+
+    getQuiz: (id) => {
+        let quiz = quizzes.find(x => x.name.toLowerCase() === id.toLowerCase());
+        if (quiz) {
+            return {done: true, quiz};
+        } else {
+            return {done: false, message: 'There was no quiz found with that name'};
+        }
     }
 }
 

@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors');
 /* use a store to separate modules */
 const { store } = require('./data/store');
+const { quizzes } = require('./data/data');
 const { flowers } = require('./data/flowers');
 const { customers } = require('./data/customers');
 
@@ -45,10 +46,20 @@ app.post('/login', (req, res) => {
 
 //3
 app.get('/flowers', (req, res) => {
-    flowerNames = [];
-
-    res.status(200).json({ done: true, result: flowers, message: 'These are the flowers from flowers.js' })
+    res.status(200).json({ done: true, result: flowers, message: 'These are the flowers from flowers.js' });
 });
+
+//4
+app.get('/quiz/:id', (req, res) => {
+    let id = req.params.id;
+    //res.status(200).json({done: true, result: quizzes[id], message: 'Here is the quiz'});
+    let quiz = store.getQuiz(id);
+    if (quiz.done) {
+        res.status(200).json({done: true, result: quiz.quiz, message: 'Here is the quiz'});
+    } else {
+        res.status(404).json({done: false, message: quiz.message});
+    }
+})
 
 app.listen(port, () => {
     console.log(`listening on ${port}`);
