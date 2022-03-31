@@ -44,7 +44,7 @@ app.post('/login', (req, res) => {
 app.get('/flowers', (req, res) => {
     flowerNames = [];
     
-    res.status(200).json({done: true, result: flowers.name, message: 'These are the flowers from flowers.js'})
+    res.status(200).json({done: true, result: flowers, message: 'These are the flowers from flowers.js'})
 });
 
 app.listen(port, () => {
