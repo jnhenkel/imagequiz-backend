@@ -47,9 +47,9 @@ let store = {
         let score = scores.filter(x => x.quizTaker.toLowerCase() === quizTaker.toLowerCase() && x.quizId.toLowerCase() === quizId.toLowerCase());
         console.log(score);
         if (score) {
-            return {done: true, score};
+            return {done: true, score: score};
         } else {
-            return {done: false, score};
+            return {done: false, score: score};
         }
     }
 }

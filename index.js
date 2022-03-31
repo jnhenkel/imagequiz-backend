@@ -76,6 +76,7 @@ app.post('/score', (req, res) => {
 app.get('/scores/:quiztaker/:quizid', (req, res) => {
     let quizTaker = req.params.quiztaker;
     let quizId = req.params.quizid;
+    console.log('quizid: ', quizId);
     let score = store.getScore(quizTaker, quizId);
     if (score.done) {
         res.status(200).json({done: true, result: score.score, message: 'The score was found'});
