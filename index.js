@@ -68,7 +68,10 @@ app.post('/score', (req, res) => {
     let quizId = req.body.quizId;
     let score = req.body.score;
     let date = new Date();
-    scores.push({quizTaker: quizTaker, quizId: quizId, score: score, date: date});
+    date.toString();
+    store.pushRecord({quizTaker: quizTaker, quizId: quizId, score: score, date: date});
+    //scores.push({quizTaker: quizTaker, quizId: quizId, score: score, date: date});
+    console.log('scores: ',scores);
     res.status(200).json({done: true, message: 'score added'});
 })
 
