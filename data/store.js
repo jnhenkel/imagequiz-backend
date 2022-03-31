@@ -7,8 +7,8 @@ let store = {
         let newID;
         if (customers.length) {
             //first check if username exists
-            for (let i=0; i<customers.length; i++) {
-                if (customers[i].name == username) {
+            for (let i = 0; i < customers.length; i++) {
+                if (customers[i].email == email) {
                     return false;
                 }
             }
@@ -19,6 +19,17 @@ let store = {
         }
         customers.push({ id: newID, name: username, email: email, password: hashed });
         return true;
+    },
+
+    login: (email, password) => {
+        let cust = customers.find(x => x.email.toLowerCase() === email.toLowerCase());
+        if (cust) {
+            let valid = bcrypt.compareSync(password, cust.password);
+            if (valid) {
+                return { valid: true };
+            }
+        }
+        return { valid: false, message: 'Credentials are invalid.' }
     }
 }
 
