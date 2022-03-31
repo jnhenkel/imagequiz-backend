@@ -2,11 +2,11 @@ const bcrypt = require('bcrypt');
 let { customers } = require('./customers');
 
 let store = {
-    addCustomer: (username, email, password) => {
+    addCustomer: (name, email, password) => {
         const hashed = bcrypt.hashSync(password, 10);//hash pw before sending to customers
         let newID;
         if (customers.length) {
-            //first check if username exists
+            //first check if name exists
             for (let i = 0; i < customers.length; i++) {
                 if (customers[i].email == email) {
                     return false;
@@ -17,7 +17,7 @@ let store = {
         } else {
             newID = 1;
         }
-        customers.push({ id: newID, name: username, email: email, password: hashed });
+        customers.push({ id: newID, name: name, email: email, password: hashed });
         return true;
     },
 

@@ -20,10 +20,10 @@ app.get('/', (req, res) => {
 
 //1
 app.get('/register', (req, res) => {
-    let username = req.body.name;
+    let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
-    let entry = store.addCustomer(username, email, password);
+    let entry = store.addCustomer(name, email, password);
     if (entry) {
         res.status(200).json({ done: true, message: 'A customer has been added successfully' });
     } else {
