@@ -9,7 +9,7 @@ let store = {
             //first check if name exists
             for (let i = 0; i < customers.length; i++) {
                 if (customers[i].email == email) {
-                    return false;
+                    return {valid: false, 'A customer already exists with that email'};
                 }
             }
             //set new id to be last id in db plus 1
@@ -18,7 +18,7 @@ let store = {
             newID = 1;
         }
         customers.push({ id: newID, name: name, email: email, password: hashed });
-        return true;
+        return {valid: true};
     },
 
     login: (email, password) => {

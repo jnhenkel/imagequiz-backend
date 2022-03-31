@@ -24,7 +24,7 @@ app.post('/register', (req, res) => {
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
     let entry = store.addCustomer(name, email, password);
-    if (entry) {
+    if (entry.valid) {
         res.status(200).json({ done: true, message: 'A customer has been added successfully' });
     } else {
         res.status(403).json({ done: false, message: 'A customer already exists with that email' });
