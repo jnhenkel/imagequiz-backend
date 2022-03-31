@@ -17,14 +17,14 @@ app.get('/', (req, res) => {
 });
 
 //1
-app.post('/register', (req, res) => {
-    let username = req.body.username;
-    let email = req.body.email;
-    let password = req.body.password; /* store will handle encryption */
+app.post('/register', (request, response) => {
+    let username = request.body.username;
+    let email = request.body.email;
+    let password = request.body.password; /* store will handle encryption */
     if (store.addCustomer(username, email, password)) {
-    res.status(200).json({done: true, message: 'A customer has been added successfully'});
+    response.status(200).json({done: true, message: 'A customer has been added successfully'});
     } else {
-        res.status(403).json({done: false, message: 'A customer already exists with that email'});
+        response.status(403).json({done: false, message: 'A customer already exists with that email'});
     }
 });
 
