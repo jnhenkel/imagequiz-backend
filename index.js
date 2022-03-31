@@ -9,7 +9,6 @@ const app = express();
 const port = process.env.PORT || 4002;
 
 //middlewares
-app.use(cors());
 app.use(express.json());
 
 //default root
