@@ -65,7 +65,7 @@ app.get('/quiz/:id', (req, res) => {
 //5
 app.post('/score', (req, res) => {
     let quizTaker = req.body.quizTaker;
-    let quizId = req.body.quizId;
+    let quizId = req.body.quizName;
     let score = req.body.score;
     let date = new Date();
     date = date.toDateString();
