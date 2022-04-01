@@ -43,10 +43,6 @@ let store = {
         }
     },
 
-    pushRecord: (obj) => {
-        scores.push(obj);
-    },
-
     getScore: (quizTaker, quizId) => {
         let score = scores.filter(x => x.quizTaker.toLowerCase() === quizTaker.toLowerCase() && x.quizName.toLowerCase() === quizId.toLowerCase());
         if (score.length) {
