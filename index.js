@@ -1,7 +1,7 @@
 const express = require('express');
 var cors = require('cors');
 /* use a store to separate modules */
-const { store } = require('./data/store');
+const { store } = require('./data_access/store');
 const { quizzes } = require('./data/data');
 const { flowers } = require('./data/flowers');
 const { customers } = require('./data/customers');
@@ -25,12 +25,15 @@ app.post('/register', (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
-    let entry = store.addCustomer(name, email, password);
-    if (entry.valid) {
-        res.status(200).json({ done: true, message: 'A customer has been added successfully' });
-    } else {
-        res.status(403).json({ done: false, message: 'A customer already exists with that email' });
-    }
+    store.addCustomer(name, email, password)
+    .then(x => res.status(200).json({ done: true, message: 'A customer has been added successfully' }))
+    .catch(e => {
+        console.log(e);
+        res.status(500).json({ done: false, message: 'Customer not added due to an error.' });
+    });
+     
+        
+    
 });
 
 //2
