@@ -40,7 +40,7 @@ let store = {
     insertQuestion: () => {
         for (id in quizzes) {
             for (el of quizzes[id].questions) {
-                pool.query('insert into imagequiz.questions (picture, choices, answer) values ($1,$2,$3)', [el.picture, el.choices.join(','), el.answer])
+                pool.query('insert into imagequiz.question (picture, choices, answer) values ($1,$2,$3)', [el.picture, el.choices.join(','), el.answer])
             }
         }
     }
