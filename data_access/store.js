@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
-const { quizzes } = require('./data/data');
+const { quizzes } = require('../data/data');
 require('dotenv').config();
 
 
