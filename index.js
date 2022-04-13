@@ -17,15 +17,7 @@ app.use(express.json());
 
 //default root
 app.get('/', (req, res) => {
-    store.insertQuestion()
-    .then(x => {
-        res.status(200).json({ done: true, message: 'This is the backend for imagequiz' });
-    })
-    .catch(e => {
-        console.log(e);
-        res.status(500).send();
-    })
-    
+    res.status(200).json({ done: true, message: 'This is the backend for imagequiz' })
 });
 
 //1
@@ -103,3 +95,4 @@ app.get('/scores/:quiztaker/:quizid', (req, res) => {
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
+
