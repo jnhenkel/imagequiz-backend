@@ -26,26 +26,28 @@ app.post('/register', (req, res) => {
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
     store.addCustomer(name, email, password)
-    .then(x => res.status(200).json({ done: true, message: 'A customer has been added successfully' }))
-    .catch(e => {
-        console.log(e);
-        res.status(500).json({ done: false, message: 'Customer not added due to an error.' });
-    });
-     
-        
-    
+        .then(x => res.status(200).json({ done: true, message: 'A customer has been added successfully' }))
+        .catch(e => {
+            console.log(e);
+            res.status(500).json({ done: false, message: 'Customer not added due to an error.' });
+        });
+
+
+
 });
 
 //2
 app.post('/login', (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
-    let dbSearch = store.login(email, password);
-    if (dbSearch.valid) {
-        res.status(200).json({ done: true, message: 'Logged in successfully' });
-    } else {
-        res.status(401).json({ done: false, message: dbSearch.message });
-    }
+    store.login(email, password)
+    .then(x => {
+        if (x.valid) {
+            res.status(200).json({ done: true, message: 'Logged in successfully' });
+        } else {
+            res.status(401).json({ done: false, message: x.message });
+        }
+    });
 });
 
 //3
@@ -59,9 +61,9 @@ app.get('/quiz/:id', (req, res) => {
     //res.status(200).json({done: true, result: quizzes[id], message: 'Here is the quiz'});
     let quiz = store.getQuiz(quizID);
     if (quiz.done) {
-        res.status(200).json({done: true, result: quiz.quiz, message: 'Here is the quiz'});
+        res.status(200).json({ done: true, result: quiz.quiz, message: 'Here is the quiz' });
     } else {
-        res.status(404).json({done: false, message: quiz.message});
+        res.status(404).json({ done: false, message: quiz.message });
     }
 })
 
@@ -72,9 +74,9 @@ app.post('/score', (req, res) => {
     let score = req.body.score;
     let date = new Date();
     date = date.toDateString();
-    scores.push({quizTaker: quizTaker, quizName: quizName, score: score, date: date});
-    console.log('scores: ',scores);
-    res.status(200).json({done: true, message: 'score added'});
+    scores.push({ quizTaker: quizTaker, quizName: quizName, score: score, date: date });
+    console.log('scores: ', scores);
+    res.status(200).json({ done: true, message: 'score added' });
 })
 
 //6
@@ -84,9 +86,9 @@ app.get('/scores/:quiztaker/:quizid', (req, res) => {
     console.log('quizid: ', quizId);
     let score = store.getScore(quizTaker, quizId);
     if (score.done) {
-        res.status(200).json({done: true, result: score.score, message: 'The score was found'});
+        res.status(200).json({ done: true, result: score.score, message: 'The score was found' });
     } else {
-        res.status(404).json({done: false, result: undefined, message: 'The score was not found'});
+        res.status(404).json({ done: false, result: undefined, message: 'The score was not found' });
     }
 })
 
