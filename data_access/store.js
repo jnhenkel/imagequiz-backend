@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const { Pool } = require('pg');
+const { quizzes } = require('./data/data');
 require('dotenv').config();
+
 
 const connectionString = `postgres://${process.env.USERNAME}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
 
@@ -33,6 +35,14 @@ let store = {
                 return {valid: false, message: 'Email not found.'};
             }
         });
+    },
+
+    insertQuestion: () => {
+        for (id in quizzes) {
+            for (el of quizzes[id].questions) {
+                pool.query('insert into imagequiz.questions (picture, choices, answer) values ($1,$2,$3)', [el.picture, el.choices.join(','), el.answer])
+            }
+        }
     }
 }
 
