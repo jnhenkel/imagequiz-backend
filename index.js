@@ -41,13 +41,13 @@ app.post('/login', (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     store.login(email, password)
-    .then(x => {
-        if (x.valid) {
-            res.status(200).json({ done: true, message: 'Logged in successfully' });
-        } else {
-            res.status(401).json({ done: false, message: x.message });
-        }
-    });
+        .then(x => {
+            if (x.valid) {
+                res.status(200).json({ done: true, message: 'Logged in successfully' });
+            } else {
+                res.status(401).json({ done: false, message: x.message });
+            }
+        });
 });
 
 //3
@@ -56,16 +56,22 @@ app.get('/flowers', (req, res) => {
 });
 
 //4
-app.get('/quiz/:id', (req, res) => {
-    let quizID = req.params.id;
-    //res.status(200).json({done: true, result: quizzes[id], message: 'Here is the quiz'});
-    let quiz = store.getQuiz(quizID);
-    if (quiz.done) {
-        res.status(200).json({ done: true, result: quiz.quiz, message: 'Here is the quiz' });
-    } else {
-        res.status(404).json({ done: false, message: quiz.message });
-    }
-})
+app.get('/quiz/:name', (req, res) => {
+    let quizName = req.params.name;
+    //res.status(200).json({done: true, result: quizzes[Name], message: 'Here is the quiz'});
+    store.getQuiz(quizName)
+        .then(x => {
+            if (x.id) {
+                res.status(200).json({ done: true, result: x });
+            } else {
+                res.status(404).json({ done: false, message: x.message });
+            }
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(500).json({done: false, message: 'Something went wrong.'});
+        })
+});
 
 //5
 app.post('/score', (req, res) => {
