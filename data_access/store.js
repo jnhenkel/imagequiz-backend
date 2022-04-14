@@ -99,45 +99,7 @@ let store = {
         where c.email = $1 
         and s.quiz_id = $2`;
         return pool.query(query, [quizTaker, quizId])
-        /*let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
-        
-        let customer_id = 
-            pool.query(idQuery, [quizTaker])
-            .then(x => {
-                if (x.rows.length > 0) {
-                    customer_id = x.rows[0].customer_id;
-                    return customer_id;
-                }
-            })
-        .then(x => {return x});
-        console.log(customer_id);
-        let query = `
-                    select s.score from imagequiz.score as s
-                    where customer_id = $1 and quiz_id = $2`;
-        return pool.query(query, [customer_id, quizId]) */
-        /*
-                    let query = `
-                    select s.score from imagequiz.score as s
-                    where customer_id = $1 and quiz_id = $2`;
-                return pool.query(query, [customer_id, quizId])
-                .then(y => {
-                    console.log(y.rows);
-                    return {done: true, score: y.rows}
-                })
-                .catch(e => {
-                    console.log(e);
-                }) 
-
-
-                }
-            })/*
-        
-        /*
-        if (score.length) {
-            return {done: true, score: score};
-        } else {
-            return {done: false};
-        }*/
+       
     }
 
 }
