@@ -7,10 +7,10 @@ require('dotenv').config();
 
 const connectionString = `postgres://${process.env.USERNAME}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DATABASEPORT}/${process.env.DATABASE}`;
 
-console.log(connectionString);    
+console.log(connectionString);
 const connection = {
-   connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL : connectionString,
-   ssl: { rejectUnauthorized: false}
+    connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL : connectionString,
+    ssl: { rejectUnauthorized: false }
 }
 
 const pool = new Pool(connection);
@@ -24,18 +24,18 @@ let store = {
 
     login: (email, password) => {
         return pool.query('SELECT name, email, password FROM imagequiz.customer WHERE email = $1', [email])
-        .then(x => {
-            if (x.rows.length ==1) {
-                let valid = bcrypt.compareSync(password, x.rows[0].password);
-                if (valid) {
-                    return {valid: true};
+            .then(x => {
+                if (x.rows.length == 1) {
+                    let valid = bcrypt.compareSync(password, x.rows[0].password);
+                    if (valid) {
+                        return { valid: true };
+                    } else {
+                        return { valid: false, message: 'Credentials are not valid.' };
+                    }
                 } else {
-                    return {valid: false, message: 'Credentials are not valid.'};
+                    return { valid: false, message: 'Email not found.' };
                 }
-            } else {
-                return {valid: false, message: 'Email not found.'};
-            }
-        });
+            });
     },
 
     getQuiz: (quizName) => {
@@ -45,54 +45,66 @@ let store = {
         join imagequiz.question q3 on q2.question_id = q3.id 
         where lower(q1.name) = $1`;
         return pool.query(query, [quizName.toLowerCase()])
-        .then(x => {
-            let quiz = {};
-            if (x.rows.length > 0) {
-                quiz = {
-                    id: x.rows[0].quiz_id,
-                    questions: x.rows.map(y => {
-                        return {id: y.id, picture: y.picture, choices: y.choices, answer: y.answer}
-                    })
-                };
-            }
-            return quiz;
-        });
+            .then(x => {
+                let quiz = {};
+                if (x.rows.length > 0) {
+                    quiz = {
+                        id: x.rows[0].quiz_id,
+                        questions: x.rows.map(y => {
+                            return { id: y.id, picture: y.picture, choices: y.choices, answer: y.answer }
+                        })
+                    };
+                }
+                return quiz;
+            });
     },
 
-    getCustomerId: (quizTaker) => {
-        let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
-        let customer_id;
-        return pool.query(idQuery, [quizTaker])
-        .then(x => {
-            if (x.rows.length > 0) {
-                customer_id = x.rows[0].customer_id;
-            }
-            return customer_id;
-        })
-        .catch(e => {
-            console.log(e);
-            return undefined;
-        })
-        
-    },
-    getQuizId: (quizName) => {
-        let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
-        let quiz_id;
-        return pool.query(quizIdQuery, [quizName.toLowerCase()])
-        .then(x => {
-            if (x.rows.length > 0) {
-                quiz_id = x.rows[0].quiz_id;
-            }
-            return quiz_id;
-        })
-        .catch(e => {
-            console.log(e);
-            return undefined;
-        })
-    },
+
     postScore: (quizTaker, quizName, score, date) => {
-        getCustomerId(quizTaker)
+        let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
+    //let customer_id;
+        pool.query(idQuery, [quizTaker])
+        //getCustomerId(quizTaker)
+            .then(x => {
+                //if (x.rows.length > 0) {
+                    let customer_id = x.rows[0].customer_id;
+                    let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
+                    //let quiz_id;
+                    pool.query(quizIdQuery, [quizName.toLowerCase()])
+                    //getQuizId(quizName)
+                        .then(y => {
+                            //if (y.rows.length > 0) {
+                                let quiz_id = y.rows[0].quiz_id;
+                                let query = `
+                                    insert into imagequiz.score (customer_id, quiz_id, date, score)
+                                    values ($1, $2, $3, $4)`;
+                                return pool.query(`insert into imagequiz.score (customer_id, quiz_id, date, score) values ($1, $2, $3, $4)`, [Number(customer_id), Number(quiz_id), date, score])
+                                /*.then(z => {
+                                    console.log(z);
+                                    return z;
+                                })
+                                .catch(e => {
+                                    console.log(e);
+                                    return 0;
+                                }) */
+                            //}
+
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            //return undefined;
+                        })
+
+                //}
+
+            })
+            .catch(e => {
+                console.log(e);
+                return undefined;
+            })
+        /*
         .then(x => {
+            console.log(x);
             let customer_id = x;
             getQuizId(quizName)
             .then(y => {
@@ -103,11 +115,11 @@ let store = {
                 return pool.query(query, [customer_id, quiz_id, date, score]);
             })
             
-        })
-        
+        }) */
+
 
     }
-    
+
 }
 
 module.exports = { store };

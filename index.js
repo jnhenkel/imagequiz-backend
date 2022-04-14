@@ -26,7 +26,10 @@ app.post('/register', (req, res) => {
     let email = req.body.email;
     let password = req.body.password; /* store will handle encryption */
     store.addCustomer(name, email, password)
-        .then(x => res.status(200).json({ done: true, message: 'A customer has been added successfully' }))
+        .then(x => {
+            //console.log(x);
+            res.status(200).json({ done: true, message: 'A customer has been added successfully' })
+        })
         .catch(e => {
             console.log(e);
             res.status(500).json({ done: false, message: 'Customer not added due to an error.' });
@@ -69,7 +72,7 @@ app.get('/quiz/:name', (req, res) => {
         })
         .catch(e => {
             console.log(e);
-            res.status(500).json({done: false, message: 'Something went wrong.'});
+            res.status(500).json({ done: false, message: 'Something went wrong.' });
         })
 });
 
@@ -83,12 +86,8 @@ app.post('/score', (req, res) => {
     //scores.push({ quizTaker: quizTaker, quizName: quizName, score: score, date: date });
     //console.log('scores: ', scores);
     store.postScore(quizTaker, quizName, score, date)
-    .then(x => res.status(200).json({ done: true, message: 'score added' }))
-    .catch( e => {
-        console.log(e);
-        res.status(500).json({done: false, message: 'score not added due to error.'});
-    });
-    
+    res.status(200).json({ done: true, message: 'score added' });
+
 });
 
 //6

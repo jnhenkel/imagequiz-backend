@@ -48,7 +48,7 @@ create table imagequiz.score (
 	id bigserial primary key,
 	customer_id int references imagequiz.customer(id),
 	quiz_id int references imagequiz.quiz(id),
-	date timestamp not null,
+	date varchar(255) not null,
 	score float8 not null
 );
 
