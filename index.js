@@ -94,13 +94,16 @@ app.post('/score', (req, res) => {
 app.get('/scores/:quiztaker/:quizid', (req, res) => {
     let quizTaker = req.params.quiztaker;
     let quizId = req.params.quizid;
-    console.log('quizid: ', quizId);
-    let score = store.getScore(quizTaker, quizId);
-    if (score.done) {
-        res.status(200).json({ done: true, result: score.score, message: 'The score was found' });
-    } else {
-        res.status(404).json({ done: false, result: undefined, message: 'The score was not found' });
-    }
+    //console.log('quizid: ', quizId);
+    store.getScore(quizTaker, quizId)
+        .then(x => {
+            console.log('x', x);
+            if (x.rows.length > 0) {
+                res.status(200).json({ done: true, result: x.rows, message: 'The score was found' });
+            } else {
+                res.status(404).json({ done: false, result: undefined, message: 'The score was not found' });
+            }
+        })
 })
 
 app.listen(port, () => {

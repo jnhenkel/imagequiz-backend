@@ -62,62 +62,82 @@ let store = {
 
     postScore: (quizTaker, quizName, score, date) => {
         let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
-    //let customer_id;
+        //let customer_id;
         pool.query(idQuery, [quizTaker])
-        //getCustomerId(quizTaker)
+            //getCustomerId(quizTaker)
             .then(x => {
                 //if (x.rows.length > 0) {
-                    let customer_id = x.rows[0].customer_id;
-                    let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
-                    //let quiz_id;
-                    pool.query(quizIdQuery, [quizName.toLowerCase()])
+                let customer_id = x.rows[0].customer_id;
+                let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
+                //let quiz_id;
+                pool.query(quizIdQuery, [quizName.toLowerCase()])
                     //getQuizId(quizName)
-                        .then(y => {
-                            //if (y.rows.length > 0) {
-                                let quiz_id = y.rows[0].quiz_id;
-                                let query = `
+                    .then(y => {
+                        //if (y.rows.length > 0) {
+                        let quiz_id = y.rows[0].quiz_id;
+                        let query = `
                                     insert into imagequiz.score (customer_id, quiz_id, date, score)
                                     values ($1, $2, $3, $4)`;
-                                return pool.query(`insert into imagequiz.score (customer_id, quiz_id, date, score) values ($1, $2, $3, $4)`, [Number(customer_id), Number(quiz_id), date, score])
-                                /*.then(z => {
-                                    console.log(z);
-                                    return z;
-                                })
-                                .catch(e => {
-                                    console.log(e);
-                                    return 0;
-                                }) */
-                            //}
-
-                        })
-                        .catch(e => {
-                            console.log(e);
-                            //return undefined;
-                        })
-
+                        return pool.query(`insert into imagequiz.score (customer_id, quiz_id, date, score) values ($1, $2, $3, $4)`, [Number(customer_id), Number(quiz_id), date, score])
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //return undefined;
+                    })
                 //}
-
             })
             .catch(e => {
                 console.log(e);
                 return undefined;
             })
-        /*
-        .then(x => {
-            console.log(x);
-            let customer_id = x;
-            getQuizId(quizName)
-            .then(y => {
-                let quiz_id = y;
-                let query = `
-                insert into imagequiz.score (customer_id, quiz_id, date, score)
-                values ($1, $2, $3, $4)`;
-                return pool.query(query, [customer_id, quiz_id, date, score]);
+    },
+
+    getScore: (quizTaker, quizId) => {
+        let query = `
+        select s.score from imagequiz.customer c
+        join imagequiz.score s on s.customer_id = c.id
+        where c.email = $1 
+        and s.quiz_id = $2`;
+        return pool.query(query, [quizTaker, quizId])
+        /*let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
+        
+        let customer_id = 
+            pool.query(idQuery, [quizTaker])
+            .then(x => {
+                if (x.rows.length > 0) {
+                    customer_id = x.rows[0].customer_id;
+                    return customer_id;
+                }
             })
-            
-        }) */
+        .then(x => {return x});
+        console.log(customer_id);
+        let query = `
+                    select s.score from imagequiz.score as s
+                    where customer_id = $1 and quiz_id = $2`;
+        return pool.query(query, [customer_id, quizId]) */
+        /*
+                    let query = `
+                    select s.score from imagequiz.score as s
+                    where customer_id = $1 and quiz_id = $2`;
+                return pool.query(query, [customer_id, quizId])
+                .then(y => {
+                    console.log(y.rows);
+                    return {done: true, score: y.rows}
+                })
+                .catch(e => {
+                    console.log(e);
+                }) 
 
 
+                }
+            })/*
+        
+        /*
+        if (score.length) {
+            return {done: true, score: score};
+        } else {
+            return {done: false};
+        }*/
     }
 
 }
