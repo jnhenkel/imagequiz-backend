@@ -96,7 +96,7 @@ let store = {
         let query = `
         select s.score from imagequiz.customer c
         join imagequiz.score s on s.customer_id = c.id
-        join imagequiz.quiz q on q.id = s.id
+        join imagequiz.quiz q on q.id = s.quiz_id
         where c.email = $1 
         and lower(q.name) = $2`;
         return pool.query(query, [quizTaker, quizId.toLowerCase()])

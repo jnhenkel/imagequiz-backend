@@ -97,7 +97,7 @@ app.get('/scores/:quiztaker/:quizid', (req, res) => {
     //console.log('quizid: ', quizId);
     store.getScore(quizTaker, quizId)
         .then(x => {
-            //console.log('x', x);
+            //console.log('x', x.rows.length);
             if (x.rows.length > 0) {
                 res.status(200).json({ done: true, result: x.rows, message: 'The score was found' });
             } else {
