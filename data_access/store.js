@@ -101,6 +101,12 @@ let store = {
         and lower(q.name) = $2`;
         return pool.query(query, [quizTaker, quizId.toLowerCase()])
        
+    },
+
+    getFlowers: () => {
+        let query = `
+        select f.name, f.picture from imagequiz.flower f`;
+        return pool.query(query, [])
     }
 
 }

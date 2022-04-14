@@ -55,7 +55,12 @@ app.post('/login', (req, res) => {
 
 //3
 app.get('/flowers', (req, res) => {
-    res.status(200).json({ done: true, result: flowers, message: 'These are the flowers from flowers.js' });
+    store.getFlowers()
+    .then(x => {
+        console.log(x.rows);
+        res.status(200).json({ done: true, result: x.rows, message: 'These are the flowers from flowers.js going through the api' });
+    })
+    
 });
 
 //4
