@@ -80,10 +80,16 @@ app.post('/score', (req, res) => {
     let score = req.body.score;
     let date = new Date();
     date = date.toDateString();
-    scores.push({ quizTaker: quizTaker, quizName: quizName, score: score, date: date });
-    console.log('scores: ', scores);
-    res.status(200).json({ done: true, message: 'score added' });
-})
+    //scores.push({ quizTaker: quizTaker, quizName: quizName, score: score, date: date });
+    //console.log('scores: ', scores);
+    store.postScore(quizTaker, quizName, score, date)
+    .then(x => res.status(200).json({ done: true, message: 'score added' }))
+    .catch( e => {
+        console.log(e);
+        res.status(500).json({done: false, message: 'score not added due to error.'});
+    });
+    
+});
 
 //6
 app.get('/scores/:quiztaker/:quizid', (req, res) => {

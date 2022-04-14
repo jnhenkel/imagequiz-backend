@@ -39,7 +39,8 @@ let store = {
     },
 
     getQuiz: (quizName) => {
-        let query = `select q1.id as quiz_id, q3.* from imagequiz.quiz as q1 
+        let query = `
+        select q1.id as quiz_id, q3.* from imagequiz.quiz as q1 
         join imagequiz.quiz_question as q2 on q1.id = q2.quiz_id
         join imagequiz.question q3 on q2.question_id = q3.id 
         where lower(q1.name) = $1`;
@@ -56,6 +57,55 @@ let store = {
             }
             return quiz;
         });
+    },
+
+    getCustomerId: (quizTaker) => {
+        let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
+        let customer_id;
+        return pool.query(idQuery, [quizTaker])
+        .then(x => {
+            if (x.rows.length > 0) {
+                customer_id = x.rows[0].customer_id;
+            }
+            return customer_id;
+        })
+        .catch(e => {
+            console.log(e);
+            return undefined;
+        })
+        
+    },
+    getQuizId: (quizName) => {
+        let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
+        let quiz_id;
+        return pool.query(quizIdQuery, [quizName.toLowerCase()])
+        .then(x => {
+            if (x.rows.length > 0) {
+                quiz_id = x.rows[0].quiz_id;
+            }
+            return quiz_id;
+        })
+        .catch(e => {
+            console.log(e);
+            return undefined;
+        })
+    },
+    postScore: (quizTaker, quizName, score, date) => {
+        getCustomerId(quizTaker)
+        .then(x => {
+            let customer_id = x;
+            getQuizId(quizName)
+            .then(y => {
+                let quiz_id = y;
+                let query = `
+                insert into imagequiz.score (customer_id, quiz_id, date, score)
+                values ($1, $2, $3, $4)`;
+                return pool.query(query, [customer_id, quiz_id, date, score]);
+            })
+            
+        })
+        
+
     }
     
 }
