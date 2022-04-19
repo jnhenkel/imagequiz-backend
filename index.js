@@ -17,7 +17,7 @@ app.use(express.json());
 
 //default root
 app.get('/', (req, res) => {
-    res.status(200).json({ done: true, message: 'This is the backend for imagequiz' })
+    res.status(200).json({ done: true, message: 'This is the backend for imagequiz 123' })
 });
 
 //1
@@ -34,8 +34,6 @@ app.post('/register', (req, res) => {
             console.log(e);
             res.status(500).json({ done: false, message: 'Customer not added due to an error.' });
         });
-
-
 
 });
 

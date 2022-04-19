@@ -66,7 +66,7 @@ let store = {
         pool.query(idQuery, [quizTaker])
             //getCustomerId(quizTaker)
             .then(x => {
-                //if (x.rows.length > 0) {
+                if (x.rows.length > 0) {
                 let customer_id = x.rows[0].customer_id;
                 let quizIdQuery = `select q.id as quiz_id from imagequiz.quiz q where lower(q.name) = $1`;
                 //let quiz_id;
@@ -84,7 +84,10 @@ let store = {
                         console.log(e);
                         //return undefined;
                     })
-                //}
+                } else {
+                    console.log('customer not in database');
+                    return {done: false, message: 'customer not in database'};
+                }
             })
             .catch(e => {
                 console.log(e);
