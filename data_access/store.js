@@ -58,8 +58,8 @@ let store = {
                 return quiz;
             });
     },
-
-
+    
+    
     postScore: (quizTaker, quizName, score, date) => {
         let idQuery = `select c.id as customer_id from imagequiz.customer c where c.email = $1`;
         //let customer_id;
@@ -93,7 +93,7 @@ let store = {
                 console.log(e);
                 return undefined;
             })
-    },
+    }, 
 
     getScore: (quizTaker, quizId) => {
         let query = `
