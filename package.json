@@ -18,6 +18,7 @@
   "homepage": "https://github.com/jnhenkel/imagequiz-backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-sqlite3": "^0.9.13",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
