@@ -180,3 +180,8 @@ app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
 
+app.post('/logout', (req,res) => {
+    req.logout();
+    res.redirect('/');
+});
+
