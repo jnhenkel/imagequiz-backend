@@ -1,7 +1,7 @@
 const express = require('express');
 var cors = require('cors');
 var passport = require('passport');
-var LocalStrategy = require('passport');
+var LocalStrategy = require('passport-local');
 var session = require('express-session');
 var SQLiteStore = require('connect-sqlite3')(session);
 /* use a store to separate modules */
