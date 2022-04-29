@@ -1,19 +1,70 @@
 const express = require('express');
 var cors = require('cors');
+var passport = require('passport');
+var LocalStrategy = require('passport');
+var session = require('express-session');
+var SQLiteStore = require('connect-sqlite3')(session);
 /* use a store to separate modules */
 const { store } = require('./data_access/store');
-const { quizzes } = require('./data/data');
-const { flowers } = require('./data/flowers');
-const { customers } = require('./data/customers');
-const { scores } = require('./data/scores');
 
 const app = express();
 
 const port = process.env.PORT || 4002;
 
 //middlewares
-app.use(cors());
+app.use(cors({
+    credentials: true
+}));
 app.use(express.json());
+
+
+
+
+app.use((request, response, next) => {
+    console.log(`request url: ${request.url}`);
+    console.log(`request method: ${request.method}`);
+    //only for development. Remove the next two lines when you deploy your final version.
+    console.log(`request body:`);
+    console.log(request.body);
+    next();
+})
+
+passport.use(
+    new LocalStrategy({ usernameField: 'email' }, function verify(username, password, cb) {
+        store.login(username, password)
+            .then(x => {
+                if (x.valid) {
+                    return cb(null, x.user);
+                } else {
+                    return cb(null, false, { message: 'Incorrect username or password.' });
+                }
+            })
+            .catch(e => {
+                console.log(e);
+                cb('Somethign went wrong!');
+            });
+
+    }));
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    store: new SQLiteStore({ db: 'sessions.db', dir: './sessions' })
+}));
+app.use(passport.authenticate('session'));
+
+passport.serializeUser(function (user, cb) {
+    process.nextTick(function () {
+        cb(null, { id: user.id, username: user.username });
+    });
+});
+
+passport.deserializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, user);
+    });
+});
 
 //default root
 app.get('/', (req, res) => {
@@ -38,31 +89,46 @@ app.post('/register', (req, res) => {
 });
 
 //2
-app.post('/login', (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-    store.login(email, password)
-        .then(x => {
-            if (x.valid) {
-                res.status(200).json({ done: true, message: 'Logged in successfully' });
-            } else {
-                res.status(401).json({ done: false, message: x.message });
-            }
-        });
+//app.post('/login', (req, res) => {
+//    let email = req.body.email;
+//    let password = req.body.password;
+//    store.login(email, password)
+//        .then(x => {
+//            if (x.valid) {
+//                res.status(200).json({ done: true, message: 'Logged in successfully' });
+//            } else {
+//                res.status(401).json({ done: false, message: x.message });
+//            }
+//        });
+//});
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/login/succeeded',
+    failureRedirect: '/login/failed'
+}));
+app.get('/login/succeeded', (request, response) => {
+    response.status(200).json({ done: true, message: 'The customer logged in successfully.' });
+});
+
+app.get('/login/failed', (request, response) => {
+    response.status(401).json({ done: false, message: 'The credentials are not valid.' });
 });
 
 //3
 app.get('/flowers', (req, res) => {
     store.getFlowers()
-    .then(x => {
-        console.log(x.rows);
-        res.status(200).json({ done: true, result: x.rows, message: 'These are the flowers from flowers.js going through the api' });
-    })
-    
+        .then(x => {
+            console.log(x.rows);
+            res.status(200).json({ done: true, result: x.rows, message: 'These are the flowers from flowers.js going through the api' });
+        })
+
 });
 
 //4
 app.get('/quiz/:name', (req, res) => {
+    //stop users from accessing quiz if not logged in
+    if (!request.isAuthenticated()) {
+        response.status(401).json({done: false, message: 'Please sign in first.'})
+    }
     let quizName = req.params.name;
     //res.status(200).json({done: true, result: quizzes[Name], message: 'Here is the quiz'});
     store.getQuiz(quizName)
