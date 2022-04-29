@@ -46,7 +46,7 @@ passport.use(
             });
 
     }));
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
