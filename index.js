@@ -13,6 +13,7 @@ const port = process.env.PORT || 4002;
 
 //middlewares
 app.use(cors({
+    origin: "https://jnhenkel.github.io/imagequiz/",
     credentials: true
 }));
 app.use(express.json());
