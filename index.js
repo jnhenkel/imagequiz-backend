@@ -127,8 +127,8 @@ app.get('/flowers', (req, res) => {
 //4
 app.get('/quiz/:name', (req, res) => {
     //stop users from accessing quiz if not logged in
-    if (!request.isAuthenticated()) {
-        response.status(401).json({done: false, message: 'Please sign in first.'})
+    if (!req.isAuthenticated()) {
+        res.status(401).json({done: false, message: 'Please sign in first.'})
     }
     let quizName = req.params.name;
     //res.status(200).json({done: true, result: quizzes[Name], message: 'Here is the quiz'});
