@@ -69,7 +69,7 @@ passport.deserializeUser(function (user, cb) {
 
 //default root
 app.get('/', (req, res) => {
-    res.status(200).json({ done: true, message: 'This is the backend for imagequiz 1' })
+    res.status(200).json({ done: true, message: 'This is the backend for imagequiz 2' })
 });
 
 //1
